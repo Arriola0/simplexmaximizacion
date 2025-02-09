@@ -1,0 +1,760 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Clase 1 y Clase 2. Simplex Maximización.</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="18ef1e0d-fe8e-80f1-973e-f1ab1f7e77a4" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🎍</span></div><h1 class="page-title">Clase 1 y Clase 2. Simplex Maximización.</h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-created_time"><th><span class="icon property-icon"><svg aria-hidden="true" role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesCreatedAt"><path d="M8 15.126C11.8623 15.126 15.0615 11.9336 15.0615 8.06445C15.0615 4.20215 11.8623 1.00293 7.99316 1.00293C4.13086 1.00293 0.938477 4.20215 0.938477 8.06445C0.938477 11.9336 4.1377 15.126 8 15.126ZM8 13.7383C4.85547 13.7383 2.33301 11.209 2.33301 8.06445C2.33301 4.91992 4.84863 2.39746 7.99316 2.39746C11.1377 2.39746 13.6738 4.91992 13.6738 8.06445C13.6738 11.209 11.1445 13.7383 8 13.7383ZM4.54102 8.91211H7.99316C8.30078 8.91211 8.54004 8.67285 8.54004 8.37207V3.8877C8.54004 3.58691 8.30078 3.34766 7.99316 3.34766C7.69238 3.34766 7.45312 3.58691 7.45312 3.8877V7.83203H4.54102C4.2334 7.83203 4.00098 8.06445 4.00098 8.37207C4.00098 8.67285 4.2334 8.91211 4.54102 8.91211Z"></path></svg></span>Created</th><td><time>@February 2, 2025 1:36 PM</time></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><svg aria-hidden="true" role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesMultipleSelect"><path d="M1.91602 4.83789C2.44238 4.83789 2.87305 4.40723 2.87305 3.87402C2.87305 3.34766 2.44238 2.91699 1.91602 2.91699C1.38281 2.91699 0.952148 3.34766 0.952148 3.87402C0.952148 4.40723 1.38281 4.83789 1.91602 4.83789ZM5.1084 4.52344H14.3984C14.7607 4.52344 15.0479 4.23633 15.0479 3.87402C15.0479 3.51172 14.7607 3.22461 14.3984 3.22461H5.1084C4.74609 3.22461 4.45898 3.51172 4.45898 3.87402C4.45898 4.23633 4.74609 4.52344 5.1084 4.52344ZM1.91602 9.03516C2.44238 9.03516 2.87305 8.60449 2.87305 8.07129C2.87305 7.54492 2.44238 7.11426 1.91602 7.11426C1.38281 7.11426 0.952148 7.54492 0.952148 8.07129C0.952148 8.60449 1.38281 9.03516 1.91602 9.03516ZM5.1084 8.7207H14.3984C14.7607 8.7207 15.0479 8.43359 15.0479 8.07129C15.0479 7.70898 14.7607 7.42188 14.3984 7.42188H5.1084C4.74609 7.42188 4.45898 7.70898 4.45898 8.07129C4.45898 8.43359 4.74609 8.7207 5.1084 8.7207ZM1.91602 13.2324C2.44238 13.2324 2.87305 12.8018 2.87305 12.2686C2.87305 11.7422 2.44238 11.3115 1.91602 11.3115C1.38281 11.3115 0.952148 11.7422 0.952148 12.2686C0.952148 12.8018 1.38281 13.2324 1.91602 13.2324ZM5.1084 12.918H14.3984C14.7607 12.918 15.0479 12.6309 15.0479 12.2686C15.0479 11.9062 14.7607 11.6191 14.3984 11.6191H5.1084C4.74609 11.6191 4.45898 11.9062 4.45898 12.2686C4.45898 12.6309 4.74609 12.918 5.1084 12.918Z"></path></svg></span>Tags</th><td></td></tr></tbody></table></header><div class="page-body"><h1 id="18ef1e0d-fe8e-800e-95e2-db2c088503d2" class="">Simplex Maximización.</h1><p id="18ef1e0d-fe8e-807f-be86-cc5f7c9b9765" class="">
+</p><p id="18ef1e0d-fe8e-80a2-85d3-ff62bb9faed3" class="">El método simplex consiste en un procedimiento matemático que tiene como finalidad principal hablar de la <em><strong>cantidad de artículos o productos a elaborar</strong></em>.</p><p id="18ef1e0d-fe8e-8066-ad3e-ea4d45536226" class="">
+</p><p id="18ef1e0d-fe8e-8032-bf8c-d78fe0c50787" class="">Dentro de este procedimiento se incluyen elementos básicos como: función objetiva, restricciones, holguras, variables básicas y variables no básicas.</p><p id="18ef1e0d-fe8e-80b8-959e-c0e799881132" class="">
+</p><p id="18ef1e0d-fe8e-805a-bbf2-ff973f9926a2" class="">Los valores a considerar dentro del procedimiento se manejan con su positivo. </p><p id="18ef1e0d-fe8e-8091-be81-d76eaaa59ef7" class="">
+</p><p id="18ef1e0d-fe8e-802b-888a-faf8e5d08988" class="">
+</p><h1 id="18ef1e0d-fe8e-8008-a1e1-c2d25b5f09b9" class="">Ejemplo Simplex Maximización.</h1><p id="18ef1e0d-fe8e-80fb-9b89-c0dcd5d1e355" class="">
+</p><ul id="18ef1e0d-fe8e-80fc-8b0e-c48259fad57c" class="bulleted-list"><li style="list-style-type:disc">Una empresa vinícola ubicada en el departamento de Quetzaltenango, se dedican a la fabricación de tipos de vino: <mark class="highlight-orange">Seco Dulce</mark>, <mark class="highlight-pink">Seco Normal</mark> y <mark class="highlight-teal">Extra Seco.</mark></li></ul><ul id="18ef1e0d-fe8e-8001-996a-ec15f883402f" class="bulleted-list"><li style="list-style-type:disc">Cada galón de <mark class="highlight-orange">Vino Seco Dulce</mark> lleva 1 medida de uva tipo “A”, 1 medida de uva tipo “B”, 2 libras de azúcar y 2 horas de mano de obra, su contribución de utilidad es de Q10.00 por cada galón.</li></ul><ul id="18ef1e0d-fe8e-80ac-9317-f14689fab0e4" class="bulleted-list"><li style="list-style-type:disc">El galón de<mark class="highlight-pink"> Vino Seco Normal</mark> lleva 2 medidas de uva tipo “A”, 1 libra de azúcar y 3 horas de mano de obra, su contribución de utilidad es de Q7.00 por cada galón.</li></ul><ul id="18ef1e0d-fe8e-80bd-bf41-ce8f75524337" class="bulleted-list"><li style="list-style-type:disc">Cada galón de <mark class="highlight-teal">Vino Extra Seco</mark> lleva 2 medidas de uva tipo “B”, 1 hora de mano de obra, su contribución de utilidad es de Q12.00 por cada galón.</li></ul><ul id="18ef1e0d-fe8e-801e-b3d5-c70c71c4ab41" class="bulleted-list"><li style="list-style-type:disc">La empresa tiene disponible 150 medidas de uva tipo “A”, 150 medidas de uva tipo “B”, 80 libras de azúcar y 225 horas de mano de obra. <strong>Determinar cual es la combinación y la cantidad de productos a fabricar para optimizar el objetivo.</strong></li></ul><blockquote id="18ef1e0d-fe8e-8048-9d4d-f65923370e4a" class="">Donde se menciona <strong>utilidad</strong> se puede considerar un <strong>objetivo</strong>.</blockquote><blockquote id="18ef1e0d-fe8e-801a-804f-cd9935b46c00" class="">Los otros elementos forman parte de la matriz. </blockquote><p id="18ef1e0d-fe8e-80c1-9277-d3ca7dd3b41f" class="">
+</p><p id="18ef1e0d-fe8e-8006-9b2e-e25e8f9ce622" class="">
+</p><h1 id="18ef1e0d-fe8e-80f4-b725-faaca4dade92" class="">Tabla de Datos.</h1><table id="18ef1e0d-fe8e-800a-acab-c787bb87a889" class="simple-table"><thead class="simple-table-header"><tr id="18ef1e0d-fe8e-8015-a5af-e782c9622541"><th id="VlDW" class="simple-table-header-color simple-table-header">Producto/insumos</th><th id="S~|B" class="simple-table-header-color simple-table-header">Seco Dulce</th><th id="?{UG" class="simple-table-header-color simple-table-header">Seco Normal</th><th id="{yq=" class="simple-table-header-color simple-table-header">Extra Seco</th><th id="|aIr" class="simple-table-header-color simple-table-header">Disponibilidad</th></tr></thead><tbody><tr id="18ef1e0d-fe8e-8048-a16f-c64aaac467d0"><th id="VlDW" class="simple-table-header-color simple-table-header">Uva Tipo A</th><td id="S~|B" class="">1 Medida</td><td id="?{UG" class="">2 Medidas</td><td id="{yq=" class="">—————</td><td id="|aIr" class="">150 Medidas</td></tr><tr id="18ef1e0d-fe8e-8033-8aae-d93d704124dc"><th id="VlDW" class="simple-table-header-color simple-table-header">Uva Tipo B</th><td id="S~|B" class="">1 Medida</td><td id="?{UG" class="">—————</td><td id="{yq=" class="">2 Medidas</td><td id="|aIr" class="">150 Medidas</td></tr><tr id="18ef1e0d-fe8e-8012-b36d-c73a3288b427"><th id="VlDW" class="simple-table-header-color simple-table-header">Azúcar</th><td id="S~|B" class="">2Libras</td><td id="?{UG" class="">1 Libra</td><td id="{yq=" class="">————</td><td id="|aIr" class="">80 Libras</td></tr><tr id="18ef1e0d-fe8e-809f-9e62-e7bc2fe1ae14"><th id="VlDW" class="simple-table-header-color simple-table-header">Mano de Obra</th><td id="S~|B" class="">2 Horas</td><td id="?{UG" class="">3 Horas</td><td id="{yq=" class="">1 Hora</td><td id="|aIr" class="">225 Horas</td></tr><tr id="18ef1e0d-fe8e-8073-8dc0-cca83cef530e"><th id="VlDW" class="simple-table-header-color simple-table-header">Utilidad</th><td id="S~|B" class="">Q10.00</td><td id="?{UG" class="">Q7.00</td><td id="{yq=" class="">Q12.00</td><td id="|aIr" class=""></td></tr></tbody></table><ul id="18ef1e0d-fe8e-80f8-8b5a-df091c0e8d5f" class="bulleted-list"><li style="list-style-type:disc">En los lugares donde no hay datos se puede colocar una “linea” o un numero “0”.</li></ul><p id="18ef1e0d-fe8e-809a-b0ff-ec29629d2877" class="">
+</p><p id="18ef1e0d-fe8e-80b1-a2ba-e1031e9bbe0b" class="">
+</p><h1 id="18ef1e0d-fe8e-807e-a230-f518925462da" class="">Valores a Introducir en la Matriz.</h1><ul id="18ef1e0d-fe8e-8086-82d9-f5ed3ceca8b8" class="bulleted-list"><li style="list-style-type:disc">Establecimiento de la <strong>función</strong> <strong>objetivo</strong> (Se toman los valores de la <strong>utilidad</strong> de cada uno de los procedimientos):</li></ul><p id="18ef1e0d-fe8e-80d9-8d3d-c74182f14388" class="">Max = 10X(1)+7X(2)+12X(2)</p><p id="18ef1e0d-fe8e-80f7-819f-feba90574668" class="">
+</p><ul id="18ef1e0d-fe8e-80be-adf0-f821eac1fdb0" class="bulleted-list"><li style="list-style-type:disc">Definición de las <strong>restricciones</strong> del problema (Conformados por los <strong>insumos</strong> para elaborar los productos):</li></ul><p id="18ef1e0d-fe8e-80b9-9064-c4680cf74168" class="">Uva Tipo A = R(1) = <strong>1X(1) + 2x(2) ≤ 150</strong></p><p id="18ef1e0d-fe8e-80f8-94c3-cdd6f05ea105" class="">Uva Tipo B = R(2) = <strong>1X(1) + 2X(3 ) ≤ 150</strong></p><p id="18ef1e0d-fe8e-8095-8672-f25dd435636e" class="">Azúcar = R(3) =        <strong>2X(1) + 1X(2) ≤ 80</strong></p><p id="18ef1e0d-fe8e-80b6-b6bb-df12004df8aa" class="">Mano de Obra = R(4)= <strong>2X(1) + 3X(2) + 1X(3) ≤ 225</strong></p><p id="18ef1e0d-fe8e-8048-8ef2-c69e57de2e86" class="">
+</p><ul id="18ef1e0d-fe8e-80cf-9e51-d6e465f1b978" class="bulleted-list"><li style="list-style-type:disc">Definición de la <strong>holgura</strong> del problema (Se debe colocar una holgura por cada restricción que exista):</li></ul><p id="18ef1e0d-fe8e-800b-a3d0-ffe4714a4a12" class="">Uva Tipo A = R(1) = <strong>1X(1) + 2x(2) + U(1) = 150</strong></p><p id="18ef1e0d-fe8e-800a-9cde-d800d62a1700" class="">Uva Tipo B = R(2) = <strong>1X(1) + 2X(3 ) + U(2) = 150</strong></p><p id="18ef1e0d-fe8e-80a3-addd-f95fe3e032cc" class="">Azúcar = R(3) =        <strong>2X(1) + 1X(2) + U(3)  =80</strong></p><p id="18ef1e0d-fe8e-80fa-914b-d94f1298a352" class="">Mano de Obra = R(4)= <strong>2X(1) + 3X(2) + 1X(3) + U(4) = 225</strong></p><p id="18ef1e0d-fe8e-80fc-aa83-d4764c8fa276" class="">
+</p><h1 id="18ef1e0d-fe8e-8057-a43f-cf26d9426683" class="">Ordenar por posición los datos anteriores (de la holgura)</h1><p id="18ff1e0d-fe8e-8095-9c4c-d2050c646a82" class="">
+</p><p id="18ef1e0d-fe8e-80dd-a24b-df143462d7fd" class="">R(1) = <strong>1X(1) + 2x(2) +                U(1)                                        = 150</strong></p><p id="18ff1e0d-fe8e-8042-84e9-efef365b60de" class="">R(2) = <strong>1X(1)             +   2X(3 )          + U(2)                              = 150</strong></p><p id="18ff1e0d-fe8e-8065-9d4a-dac0e595f195" class="">R(3) = <strong>2X(1) + 1X(2)                                       + U(3)                =80</strong></p><p id="18ff1e0d-fe8e-80e1-9bbf-f2dfb2135bbd" class="">R(4) = <strong>2X(1) + 3X(2)   + 1X(3)                                      + U(4)  = 225</strong></p><p id="18ef1e0d-fe8e-80a2-b6c6-e85517dba56a" class="">
+</p><ul id="18ef1e0d-fe8e-80a0-959c-c16755130728" class="bulleted-list"><li style="list-style-type:disc">las X son las restricciones y se crea una holgura para cada una, entonces las U son las holguras.</li></ul><ul id="18ef1e0d-fe8e-80da-be11-ea39058d0040" class="bulleted-list"><li style="list-style-type:disc">La U tienen valor de 1, aunque no este ahi, se sabe que eso valen. </li></ul><h1 id="18ff1e0d-fe8e-80dc-8890-e2b50fbb0625" class="">Matriz I</h1><table id="18ff1e0d-fe8e-80be-a836-ecc0030d667e" class="simple-table"><thead class="simple-table-header"><tr id="18ff1e0d-fe8e-8072-8829-f9b60c29486f"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px"></th><th id="^Tus" class="simple-table-header-color simple-table-header" style="width:45px">X(1)</th><th id="@uFv" class="simple-table-header-color simple-table-header" style="width:50px">X(2)</th><th id="`ZiJ" class="simple-table-header-color simple-table-header" style="width:46px">X(3)</th><th id="hxcb" class="simple-table-header-color simple-table-header" style="width:48px">U(1)</th><th id="Bwc?" class="simple-table-header-color simple-table-header" style="width:50px">U(2)</th><th id=":sFu" class="simple-table-header-color simple-table-header" style="width:47px">U(3)</th><th id="VGP:" class="simple-table-header-color simple-table-header" style="width:48px">U(4)</th><th id="nbO\" class="simple-table-header-color simple-table-header" style="width:48px">b</th></tr></thead><tbody><tr id="18ff1e0d-fe8e-8072-a69d-cd12d71314ca"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(1)</th><td id="^Tus" class="" style="width:45px">1</td><td id="@uFv" class="" style="width:50px">2</td><td id="`ZiJ" class="" style="width:46px">—</td><td id="hxcb" class="" style="width:48px">1</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">150</td></tr><tr id="18ff1e0d-fe8e-8046-8f60-c76b8a0037e1"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(2)</th><td id="^Tus" class="" style="width:45px">1</td><td id="@uFv" class="" style="width:50px">—-</td><td id="`ZiJ" class="" style="width:46px">2</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">1</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">150</td></tr><tr id="18ff1e0d-fe8e-8038-9d95-fbf461553264"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(3)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">1</td><td id="`ZiJ" class="" style="width:46px">0</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">1</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">80</td></tr><tr id="18ff1e0d-fe8e-8020-a06c-fcf648aa72a6"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(4)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">3</td><td id="`ZiJ" class="" style="width:46px">1</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">1</td><td id="nbO\" class="" style="width:48px">225</td></tr><tr id="18ff1e0d-fe8e-8097-8952-f41c7b5f2477"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">Z</th><td id="^Tus" class="" style="width:45px">10</td><td id="@uFv" class="" style="width:50px">7</td><td id="`ZiJ" class="" style="width:46px">12</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">0</td></tr></tbody></table><ul id="18ff1e0d-fe8e-805e-9e59-c2595114a9d7" class="bulleted-list"><li style="list-style-type:disc">el la fila de z para completarla en todas las U se añade el valor de 0</li></ul><p id="18ff1e0d-fe8e-8079-b0c0-e5ab34e6fa1f" class="">
+</p><p id="18ff1e0d-fe8e-80e1-9624-ed61b672a286" class="">
+</p><h1 id="18ff1e0d-fe8e-8008-a8c1-f9b2eaf67dc5" class="">Resolución </h1><h1 id="195f1e0d-fe8e-80e6-aaf7-e88336b684a9" class=""><em><mark class="highlight-orange_background"><strong>Paso 1:</strong></mark></em> <strong>Seleccionar la columna clave.</strong></h1><p id="18ef1e0d-fe8e-80ef-991d-cbb5c71cd419" class="">
+</p><ul id="18ef1e0d-fe8e-80f1-9459-f3ce55c10baf" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-orange_background"><strong>Paso 1:</strong></mark></em> <strong>Seleccionar la columna clave</strong>, de los valores que se tienen en la función objetivo, escoger el <strong>Mayor Valor Positivo</strong> que se posea en dicha fila, en lo que se refiere a las variables de decision (X1, X2, X3) y de holgura (U1, U2, U3, U4)..</li></ul><p id="18ff1e0d-fe8e-80cb-aae9-f871f45f6c3d" class="">
+</p><table id="18ff1e0d-fe8e-8055-8919-e97a874f8ae0" class="simple-table"><thead class="simple-table-header"><tr id="18ff1e0d-fe8e-80d2-a802-ed0b4663c2e1"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px"></th><th id="^Tus" class="simple-table-header-color simple-table-header" style="width:45px">X(1)</th><th id="@uFv" class="simple-table-header-color simple-table-header" style="width:50px">X(2)</th><th id="`ZiJ" class="block-color-yellow_background simple-table-header" style="width:46px">X(3)</th><th id="hxcb" class="simple-table-header-color simple-table-header" style="width:48px">U(1)</th><th id="Bwc?" class="simple-table-header-color simple-table-header" style="width:50px">U(2)</th><th id=":sFu" class="simple-table-header-color simple-table-header" style="width:47px">U(3)</th><th id="VGP:" class="simple-table-header-color simple-table-header" style="width:48px">U(4)</th><th id="nbO\" class="simple-table-header-color simple-table-header" style="width:48px">b</th></tr></thead><tbody><tr id="18ff1e0d-fe8e-8025-9e77-f48513513b7d"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(1)</th><td id="^Tus" class="" style="width:45px">1</td><td id="@uFv" class="" style="width:50px">2</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px">—</td><td id="hxcb" class="" style="width:48px">1</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">150</td></tr><tr id="18ff1e0d-fe8e-80de-a2ac-ef0aa91271cb"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(2)</th><td id="^Tus" class="" style="width:45px">1</td><td id="@uFv" class="" style="width:50px">—-</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px">2</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">1</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">150</td></tr><tr id="18ff1e0d-fe8e-8073-8d24-ee31a5f3627a"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(3)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">1</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px">0</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">1</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">80</td></tr><tr id="18ff1e0d-fe8e-8000-9dea-da87a1dd65c3"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(4)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">3</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px">1</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">1</td><td id="nbO\" class="" style="width:48px">225</td></tr><tr id="18ff1e0d-fe8e-80c7-84f8-ec1149724f01"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">Z</th><td id="^Tus" class="" style="width:45px">10</td><td id="@uFv" class="" style="width:50px">7</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px"><mark class="highlight-red"><mark class="highlight-blue_background"><strong>12</strong></mark></mark></td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">0</td></tr></tbody></table><ul id="18ef1e0d-fe8e-80d3-946a-edb8f2205c42" class="bulleted-list"><li style="list-style-type:disc">En este caso la columna clave es X3 porque en la fila Z, es el que tiene el valor mas alto. </li></ul><p id="195f1e0d-fe8e-8069-87ef-f7d71c16ed1b" class="">
+</p><hr id="195f1e0d-fe8e-80f4-9223-ebd04659060b"/><p id="195f1e0d-fe8e-80c6-b6e6-df3a0c188327" class="">
+</p><h1 id="195f1e0d-fe8e-8064-827b-cd16215772c2" class=""><em><mark class="highlight-orange_background"><strong>Paso 2:</strong></mark></em> <strong>Seleccionar la Fila Clave.</strong></h1><ul id="18ff1e0d-fe8e-802d-bd9a-d58e10ac258a" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-orange_background"><strong>Paso 2:</strong></mark></em> <strong>Seleccionar la Fila Clave</strong>, de los valores seleccionados de la <strong>columna clave</strong>, dividirlos con los valores de la columna de la <strong>disponibilidad</strong> <strong>(b)</strong>; a excepción de los valores de la fila de la función objetivo. Se debe seleccionar <strong>El Menor Valor Positivo.</strong> </li></ul><p id="18ff1e0d-fe8e-8001-9037-dfb3c577d512" class="">
+</p><table id="18ff1e0d-fe8e-8038-a7a8-e56a3a76b325" class="simple-table"><thead class="simple-table-header"><tr id="18ff1e0d-fe8e-8055-8580-eb1d06806a20"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px"></th><th id="^Tus" class="simple-table-header-color simple-table-header" style="width:45px">X(1)</th><th id="@uFv" class="simple-table-header-color simple-table-header" style="width:50px">X(2)</th><th id="`ZiJ" class="block-color-yellow_background simple-table-header" style="width:46px">X(3)</th><th id="hxcb" class="simple-table-header-color simple-table-header" style="width:48px">U(1)</th><th id="Bwc?" class="simple-table-header-color simple-table-header" style="width:50px">U(2)</th><th id=":sFu" class="simple-table-header-color simple-table-header" style="width:47px">U(3)</th><th id="VGP:" class="simple-table-header-color simple-table-header" style="width:48px">U(4)</th><th id="nbO\" class="simple-table-header-color simple-table-header" style="width:48px">b</th><th id="FjcP" class="simple-table-header-color simple-table-header" style="width:79px"></th><th id="r[W[" class="block-color-orange_background simple-table-header" style="width:47px"></th></tr></thead><tbody><tr id="18ff1e0d-fe8e-80f4-997e-da2c58b0aac4"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(1)</th><td id="^Tus" class="" style="width:45px">1</td><td id="@uFv" class="" style="width:50px">2</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px">—</td><td id="hxcb" class="" style="width:48px">1</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">150</td><td id="FjcP" class="" style="width:79px">150 /0 =</td><td id="r[W[" class="block-color-orange_background" style="width:47px">0</td></tr><tr id="18ff1e0d-fe8e-8018-a157-c3af448d2509"><th id="CjzH" class="block-color-blue_background simple-table-header" style="width:46px">R(2)</th><td id="^Tus" class="block-color-blue_background" style="width:45px">1</td><td id="@uFv" class="block-color-blue_background" style="width:50px">—</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px">2</td><td id="hxcb" class="block-color-blue_background" style="width:48px">0</td><td id="Bwc?" class="block-color-blue_background" style="width:50px">1</td><td id=":sFu" class="block-color-blue_background" style="width:47px">0</td><td id="VGP:" class="block-color-blue_background" style="width:48px">0</td><td id="nbO\" class="block-color-blue_background" style="width:48px">150</td><td id="FjcP" class="block-color-blue_background" style="width:79px">150 / 2 =</td><td id="r[W[" class="block-color-orange_background" style="width:47px"><mark class="highlight-red"><strong>75</strong></mark></td></tr><tr id="18ff1e0d-fe8e-8045-8737-e58e346a20d7"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(3)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">1</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px">0</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">1</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">80</td><td id="FjcP" class="" style="width:79px">80 / 0 =</td><td id="r[W[" class="block-color-orange_background" style="width:47px">0</td></tr><tr id="18ff1e0d-fe8e-808e-b3c6-e17e5a98c8a7"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(4)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">3</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px">1</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">1</td><td id="nbO\" class="" style="width:48px">225</td><td id="FjcP" class="" style="width:79px">225 / 1 =</td><td id="r[W[" class="block-color-orange_background" style="width:47px">225</td></tr><tr id="18ff1e0d-fe8e-80bd-ae34-e689487f7f3c"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">Z</th><td id="^Tus" class="" style="width:45px">10</td><td id="@uFv" class="" style="width:50px">7</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px"><mark class="highlight-red"><mark class="highlight-blue_background"><strong>12</strong></mark></mark></td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">0</td><td id="FjcP" class="" style="width:79px"></td><td id="r[W[" class="block-color-orange_background" style="width:47px"></td></tr></tbody></table><ul id="18ef1e0d-fe8e-80f4-8d5a-ddc29a678463" class="bulleted-list"><li style="list-style-type:disc">Después de dividir la columna X3 con la b, se busca el valor mas <strong>pequeño</strong> y esa fila sera la <strong>Fila Clave</strong>.</li></ul><p id="195f1e0d-fe8e-80d9-8d4e-e09e37ceb5fd" class="">
+</p><p id="195f1e0d-fe8e-80ce-8583-ea86ee2986d5" class="">
+</p><h1 id="195f1e0d-fe8e-8038-84a3-dd2ab68da7f0" class=""><em><mark class="highlight-orange_background"><strong>Paso 3.</strong></mark></em> Sacar el inverso del numero clave.</h1><ul id="18ef1e0d-fe8e-80c4-a128-f9751df291f9" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-orange_background"><strong>Paso 3.</strong></mark></em> Sacar el inverso del numero clave.</li></ul><table id="18ff1e0d-fe8e-80da-af71-c7a076577c5a" class="simple-table"><thead class="simple-table-header"><tr id="18ff1e0d-fe8e-8008-aa34-ecfe9d68bb44"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px"></th><th id="^Tus" class="simple-table-header-color simple-table-header" style="width:45px">X(1)</th><th id="@uFv" class="simple-table-header-color simple-table-header" style="width:50px">X(2)</th><th id="`ZiJ" class="block-color-yellow_background simple-table-header" style="width:46px">X(3)</th><th id="hxcb" class="simple-table-header-color simple-table-header" style="width:48px">U(1)</th><th id="Bwc?" class="simple-table-header-color simple-table-header" style="width:50px">U(2)</th><th id=":sFu" class="simple-table-header-color simple-table-header" style="width:47px">U(3)</th><th id="VGP:" class="simple-table-header-color simple-table-header" style="width:48px">U(4)</th><th id="nbO\" class="simple-table-header-color simple-table-header" style="width:48px">b</th><th id="FjcP" class="simple-table-header-color simple-table-header" style="width:79px"></th><th id="r[W[" class="block-color-orange_background simple-table-header" style="width:47px"></th></tr></thead><tbody><tr id="18ff1e0d-fe8e-8088-874f-cfe69bce5cc5"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(1)</th><td id="^Tus" class="" style="width:45px">1</td><td id="@uFv" class="" style="width:50px">2</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px">—</td><td id="hxcb" class="" style="width:48px">1</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">150</td><td id="FjcP" class="" style="width:79px">150 /0 =</td><td id="r[W[" class="block-color-orange_background" style="width:47px">0</td></tr><tr id="18ff1e0d-fe8e-803c-a9f4-fd26538f5d19"><th id="CjzH" class="block-color-blue_background simple-table-header" style="width:46px">R(2)</th><td id="^Tus" class="block-color-blue_background" style="width:45px">1</td><td id="@uFv" class="block-color-blue_background" style="width:50px">—-‘</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px"><mark class="highlight-red"><strong>2</strong></mark></td><td id="hxcb" class="block-color-blue_background" style="width:48px">0</td><td id="Bwc?" class="block-color-blue_background" style="width:50px">1</td><td id=":sFu" class="block-color-blue_background" style="width:47px">0</td><td id="VGP:" class="block-color-blue_background" style="width:48px">0</td><td id="nbO\" class="block-color-blue_background" style="width:48px">150</td><td id="FjcP" class="block-color-blue_background" style="width:79px">150 / 2 =</td><td id="r[W[" class="block-color-orange_background" style="width:47px"><mark class="highlight-red"><strong>75</strong></mark></td></tr><tr id="18ff1e0d-fe8e-8095-8f18-d81f441a3766"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(3)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">1</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px">0</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">1</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">80</td><td id="FjcP" class="" style="width:79px">80 / 0 =</td><td id="r[W[" class="block-color-orange_background" style="width:47px">0</td></tr><tr id="18ff1e0d-fe8e-8068-bb02-d81ac3df6afb"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(4)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">3</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px">1</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">1</td><td id="nbO\" class="" style="width:48px">225</td><td id="FjcP" class="" style="width:79px">225 / 1 =</td><td id="r[W[" class="block-color-orange_background" style="width:47px">225</td></tr><tr id="18ff1e0d-fe8e-802d-9334-c1551f655f36"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">Z</th><td id="^Tus" class="" style="width:45px">10</td><td id="@uFv" class="" style="width:50px">7</td><td id="`ZiJ" class="block-color-yellow_background" style="width:46px"><mark class="highlight-red"><mark class="highlight-blue_background"><strong>12</strong></mark></mark></td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">0</td><td id="FjcP" class="" style="width:79px"></td><td id="r[W[" class="block-color-orange_background" style="width:47px"></td></tr></tbody></table><ul id="18ef1e0d-fe8e-8042-9aba-ece9d09a38a1" class="bulleted-list"><li style="list-style-type:disc">El valor que queda en la intersección entre la columna y la fila clave se le hace el inverso, en este caso es el numero 2.</li></ul><p id="18ef1e0d-fe8e-8031-aa8c-d95e4460ada0" class="">
+</p><ul id="18ff1e0d-fe8e-8037-bdde-ca480743c99c" class="bulleted-list"><li style="list-style-type:disc">Sacar el inverso de ese numero.</li></ul><p id="18ef1e0d-fe8e-8002-aeeb-c9bb252fa4ea" class="">
+</p><p id="18ff1e0d-fe8e-8032-839b-fc42088a91e9" class="">1 / 2 = 0.5 + <mark class="highlight-orange_background">ab/c =</mark><mark class="highlight-default_background"> </mark><mark class="highlight-red"><mark class="highlight-default_background"><strong>1/2</strong></mark></mark></p><p id="195f1e0d-fe8e-8062-992f-c72db454551b" class="">
+</p><hr id="18ff1e0d-fe8e-80f4-b5bc-d4e3c32f54c7"/><p id="195f1e0d-fe8e-80ad-93d0-d453ceb4b021" class="">
+</p><h1 id="195f1e0d-fe8e-80cb-99ec-e15ac383b496" class=""><em><mark class="highlight-orange_background"><strong>Paso 4:</strong></mark></em> <em>Conversión de la Fila Clave.</em></h1><ul id="18ef1e0d-fe8e-8087-b796-e3d24e9d75f7" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-orange_background"><strong>Paso 4:</strong></mark></em> <em>Conversión de la Fila Clave</em>: El inverso obtenido se debe multiplicar por todos los valores que contiene la fila clave.</li></ul><table id="195f1e0d-fe8e-809a-aa74-cfe9aaab0645" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-807b-87c2-d4654d9133f9"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px"></th><th id="^Tus" class="simple-table-header-color simple-table-header" style="width:45px">X(1)</th><th id="@uFv" class="simple-table-header-color simple-table-header" style="width:50px">X(2)</th><th id="`ZiJ" class="block-color-default_background simple-table-header" style="width:46px">X(3)</th><th id="hxcb" class="simple-table-header-color simple-table-header" style="width:48px">U(1)</th><th id="Bwc?" class="simple-table-header-color simple-table-header" style="width:50px">U(2)</th><th id=":sFu" class="simple-table-header-color simple-table-header" style="width:47px">U(3)</th><th id="VGP:" class="simple-table-header-color simple-table-header" style="width:48px">U(4)</th><th id="nbO\" class="simple-table-header-color simple-table-header" style="width:48px">b</th></tr></thead><tbody><tr id="195f1e0d-fe8e-8036-9d17-c10e3472056b"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(1)</th><td id="^Tus" class="" style="width:45px">1</td><td id="@uFv" class="" style="width:50px">2</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">—</td><td id="hxcb" class="" style="width:48px">1</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">150</td></tr><tr id="195f1e0d-fe8e-805c-9a83-d9fd5133961d"><th id="CjzH" class="block-color-blue_background simple-table-header" style="width:46px">R(2)</th><td id="^Tus" class="block-color-blue_background" style="width:45px">1</td><td id="@uFv" class="block-color-blue_background" style="width:50px">—-‘</td><td id="`ZiJ" class="block-color-default_background" style="width:46px"><mark class="highlight-red"><strong>2</strong></mark></td><td id="hxcb" class="block-color-blue_background" style="width:48px">0</td><td id="Bwc?" class="block-color-blue_background" style="width:50px">1</td><td id=":sFu" class="block-color-blue_background" style="width:47px">0</td><td id="VGP:" class="block-color-blue_background" style="width:48px">0</td><td id="nbO\" class="block-color-blue_background" style="width:48px">150</td></tr><tr id="195f1e0d-fe8e-80f2-a9b1-f8fbf79967ee"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(3)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">1</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">0</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">1</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">80</td></tr><tr id="195f1e0d-fe8e-8004-852f-e7d7589c19e6"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(4)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">3</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">1</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">1</td><td id="nbO\" class="" style="width:48px">225</td></tr><tr id="195f1e0d-fe8e-80cb-9488-c8af9ba080f1"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">Z</th><td id="^Tus" class="" style="width:45px">10</td><td id="@uFv" class="" style="width:50px">7</td><td id="`ZiJ" class="block-color-default_background" style="width:46px"><mark class="highlight-red"><mark class="highlight-blue_background"><strong>12</strong></mark></mark></td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">0</td></tr></tbody></table><p id="18ef1e0d-fe8e-80c5-9aff-f3948d2a88f8" class="">1/2 * 1 = <mark class="highlight-orange_background"><strong>1/2</strong></mark></p><p id="195f1e0d-fe8e-80d3-b30e-f5910656e8f0" class="">1/2 * 0 = <mark class="highlight-orange_background"><strong>0</strong></mark></p><p id="195f1e0d-fe8e-80cf-9349-dbdff010d4de" class="">1/2 * 2 = <mark class="highlight-orange_background"><strong>1</strong></mark></p><p id="195f1e0d-fe8e-8056-acc8-faf7b5058201" class="">1/2 * 0 = <mark class="highlight-orange_background"><strong>0</strong></mark></p><p id="18ef1e0d-fe8e-8016-be93-f17edb1605ae" class="">1/2 * 1 = <mark class="highlight-orange_background"><strong>1/2</strong></mark></p><p id="195f1e0d-fe8e-804e-a946-f188d2d6eb20" class="">1/2 * 0 = <mark class="highlight-orange_background"><strong>0</strong></mark></p><p id="195f1e0d-fe8e-8035-b6c9-f9e72495ea48" class="">1/2 * 0 = <mark class="highlight-orange_background"><strong>0</strong></mark></p><p id="195f1e0d-fe8e-8065-8a3e-edf2148b1a71" class="">1/2 * 150 = <mark class="highlight-orange_background"><strong>75</strong></mark></p><p id="195f1e0d-fe8e-804a-bffb-c3a76482f5c1" class="">Resultados de R(2)= <em><strong>1/2 - 0 - 1 - 0 - 1/2 - 0 -0 -75</strong></em></p><p id="195f1e0d-fe8e-800d-9975-dbd09991aa28" class="">
+</p><hr id="195f1e0d-fe8e-80e9-87bb-c4a1292dcd50"/><p id="195f1e0d-fe8e-80cc-beed-e1f8eaf909f1" class="">
+</p><h1 id="195f1e0d-fe8e-8088-b580-f9ac5d43c936" class=""><em><mark class="highlight-orange_background"><strong>Paso 5:</strong></mark></em> <strong>Conversion Elementos Columna Clave.</strong></h1><ul id="18ef1e0d-fe8e-808a-9bb7-e3d819b2a860" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-orange_background"><strong>Paso 5:</strong></mark></em> <strong>Conversion Elementos Columna Clave:</strong> Se coloca el opuesto de los elementos restantes y se realiza una suma algebraica para cada valor. </li></ul><table id="195f1e0d-fe8e-8013-90a6-f9a4b9c3b2b5" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-805f-9d97-ffef1f32a6f2"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px"></th><th id="^Tus" class="simple-table-header-color simple-table-header" style="width:45px">X(1)</th><th id="@uFv" class="simple-table-header-color simple-table-header" style="width:50px">X(2)</th><th id="`ZiJ" class="block-color-orange_background simple-table-header" style="width:46px">X(3)</th><th id="hxcb" class="simple-table-header-color simple-table-header" style="width:48px">U(1)</th><th id="Bwc?" class="simple-table-header-color simple-table-header" style="width:50px">U(2)</th><th id=":sFu" class="simple-table-header-color simple-table-header" style="width:47px">U(3)</th><th id="VGP:" class="simple-table-header-color simple-table-header" style="width:48px">U(4)</th><th id="nbO\" class="simple-table-header-color simple-table-header" style="width:48px">b</th></tr></thead><tbody><tr id="195f1e0d-fe8e-80fb-ad32-e0ba2a98d96b"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(1)</th><td id="^Tus" class="" style="width:45px">1</td><td id="@uFv" class="" style="width:50px">2</td><td id="`ZiJ" class="block-color-orange_background" style="width:46px">—</td><td id="hxcb" class="" style="width:48px">1</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">150</td></tr><tr id="195f1e0d-fe8e-8086-9848-fa04a8e4bae9"><th id="CjzH" class="block-color-default_background simple-table-header" style="width:46px">R(2)</th><td id="^Tus" class="block-color-default_background" style="width:45px">1</td><td id="@uFv" class="block-color-default_background" style="width:50px">—-‘</td><td id="`ZiJ" class="block-color-orange_background" style="width:46px"><mark class="highlight-red"><strong>2</strong></mark></td><td id="hxcb" class="block-color-default_background" style="width:48px">0</td><td id="Bwc?" class="block-color-default_background" style="width:50px">1</td><td id=":sFu" class="block-color-default_background" style="width:47px">0</td><td id="VGP:" class="block-color-default_background" style="width:48px">0</td><td id="nbO\" class="block-color-default_background" style="width:48px">150</td></tr><tr id="195f1e0d-fe8e-80ff-84f2-df2a4d529e45"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(3)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">1</td><td id="`ZiJ" class="block-color-orange_background" style="width:46px">0</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">1</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">80</td></tr><tr id="195f1e0d-fe8e-805e-a994-e5952ed01257"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(4)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">3</td><td id="`ZiJ" class="block-color-orange_background" style="width:46px">1</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">1</td><td id="nbO\" class="" style="width:48px">225</td></tr><tr id="195f1e0d-fe8e-80a7-a3bd-fabc0e5ecc18"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">Z</th><td id="^Tus" class="" style="width:45px">10</td><td id="@uFv" class="" style="width:50px">7</td><td id="`ZiJ" class="block-color-orange_background" style="width:46px"><mark class="highlight-red"><mark class="highlight-blue_background"><strong>12</strong></mark></mark></td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">0</td></tr></tbody></table><p id="195f1e0d-fe8e-80f5-9409-dd72beeb9365" class="">
+</p><table id="195f1e0d-fe8e-809b-88d9-fd607bb4eeaa" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-80c4-b228-ed7e277ad942"><th id="NTZ`" class="simple-table-header-color simple-table-header">Restricciones</th><th id="W|jd" class="simple-table-header-color simple-table-header" style="width:70px">X(3)</th><th id="ImKj" class="simple-table-header-color simple-table-header" style="width:87px">Opuesto</th><th id=";^LF" class="simple-table-header-color simple-table-header">Resultado.</th></tr></thead><tbody><tr id="195f1e0d-fe8e-804c-bf54-d0d19c523c01"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(1)</th><td id="W|jd" class="" style="width:70px">——</td><td id="ImKj" class="" style="width:87px">——</td><td id=";^LF" class="">——</td></tr><tr id="195f1e0d-fe8e-800c-8283-e7548e567671"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(2)</th><td id="W|jd" class="" style="width:70px">2</td><td id="ImKj" class="" style="width:87px">1/2</td><td id=";^LF" class="">1</td></tr><tr id="195f1e0d-fe8e-804f-89fc-de58cd2eba61"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(3)</th><td id="W|jd" class="" style="width:70px">——</td><td id="ImKj" class="" style="width:87px">——-</td><td id=";^LF" class="">——-</td></tr><tr id="195f1e0d-fe8e-80d3-90d2-e7e64f97184c"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(4)</th><td id="W|jd" class="" style="width:70px">1</td><td id="ImKj" class="" style="width:87px">-1</td><td id=";^LF" class="">0</td></tr><tr id="195f1e0d-fe8e-8079-8e1a-da8fdf0c56a4"><th id="NTZ`" class="simple-table-header-color simple-table-header">Z</th><td id="W|jd" class="" style="width:70px">12</td><td id="ImKj" class="" style="width:87px">-12</td><td id=";^LF" class="">0</td></tr></tbody></table><ul id="195f1e0d-fe8e-8075-9f36-e467a5ad43bf" class="bulleted-list"><li style="list-style-type:disc">Aquí se copian todos los elementos de la columna clave.</li></ul><ul id="195f1e0d-fe8e-80d4-8dfb-cd55c3384e4e" class="bulleted-list"><li style="list-style-type:disc">Y se saca el inverso de cada elemento, excepto a los números 0, a esos no se puede, en este caso tengo una linea.</li></ul><ul id="195f1e0d-fe8e-8050-ab64-d603962a7513" class="bulleted-list"><li style="list-style-type:disc">Luego se hace una suma algebraica.</li></ul><ul id="195f1e0d-fe8e-803d-a924-d236f27a45bc" class="bulleted-list"><li style="list-style-type:disc">Solo en donde esta el inverso de la fila clave R(2) se multiplica.</li></ul><p id="195f1e0d-fe8e-8085-abe9-cf779b033439" class="">
+</p><hr id="195f1e0d-fe8e-80d7-b4e5-fb9eb7a66ed8"/><p id="195f1e0d-fe8e-801a-9a45-e9702bc6aca7" class="">
+</p><h1 id="195f1e0d-fe8e-80bc-bdeb-f21c23ca9fd0" class=""><em><mark class="highlight-orange_background"><strong>Paso 6:</strong></mark></em> Conversion de las Otras Filas de la Matriz.</h1><ul id="195f1e0d-fe8e-8078-b3b0-fd757f78f5e2" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-orange_background"><strong>Paso 6:</strong></mark></em> Conversion de las Otras Filas de la Matriz; Se desarrolla el siguiente procedimiento.</li></ul><ul id="195f1e0d-fe8e-806d-abbb-fb3fd0f1e4df" class="bulleted-list"><li style="list-style-type:disc">Tomar como multiplicador el opuesto de la fila que se va a convertir (Paso 5.)</li></ul><ul id="195f1e0d-fe8e-801b-b8f0-f8be8a1dbbd9" class="bulleted-list"><li style="list-style-type:disc">Este opuesto, se debe multiplicar por cada uno de los elementos de la fila clave ya convertida. (paso 4.)</li></ul><ul id="195f1e0d-fe8e-807d-9b28-cc2f900ca162" class="bulleted-list"><li style="list-style-type:disc">A cada producto obtenido, se debe sumarle algebraicamente el valor respectivo que se va a convertir, tomar las cantidades de la matriz que se esta trabajando. ejemplo: <mark class="highlight-gray_background">-1</mark> <mark class="highlight-brown_background">(1/2) </mark>+<mark class="highlight-orange_background"> 2</mark> = <strong>3/2</strong></li></ul><ul id="195f1e0d-fe8e-8086-b495-f0adf2a241c9" class="bulleted-list"><li style="list-style-type:disc">Nota: Aquellos valores que en el paso 5 no se haya obtenido su opuesto (guiones o ceros), se omiten y se colocan los mismos valores de la matriz anterior para la nueva matriz.</li></ul><h2 id="195f1e0d-fe8e-8019-8f1c-ef1768c03cba" class="">Resolución 1. </h2><p id="195f1e0d-fe8e-8073-aa9e-c896e5952758" class="">Elementos necesarios, son 3:</p><ol type="1" id="195f1e0d-fe8e-8012-b35c-e8e4219a2fba" class="numbered-list" start="1"><li><strong>Elemento Necesario 1. El valor de la columna </strong><em><strong>Opuesto</strong></em></li></ol><table id="195f1e0d-fe8e-80fc-99e8-c66d680e6ba9" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-80f4-bbe4-fa96b59a8d57"><th id="NTZ`" class="simple-table-header-color simple-table-header">Restricciones</th><th id="W|jd" class="simple-table-header-color simple-table-header" style="width:70px">X(3)</th><th id="ImKj" class="simple-table-header-color simple-table-header" style="width:87px">Opuesto</th><th id=";^LF" class="simple-table-header-color simple-table-header">Resultado.</th></tr></thead><tbody><tr id="195f1e0d-fe8e-80a0-ac92-da390d0dc63c"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(1)</th><td id="W|jd" class="" style="width:70px">——</td><td id="ImKj" class="" style="width:87px">——</td><td id=";^LF" class="">——</td></tr><tr id="195f1e0d-fe8e-8051-a4c3-e13f99a1a7ea"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(2)</th><td id="W|jd" class="" style="width:70px">2</td><td id="ImKj" class="" style="width:87px">1/2</td><td id=";^LF" class="">1</td></tr><tr id="195f1e0d-fe8e-8044-b0ed-e614ef11e460"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(3)</th><td id="W|jd" class="" style="width:70px">——</td><td id="ImKj" class="" style="width:87px">——-</td><td id=";^LF" class="">——-</td></tr><tr id="195f1e0d-fe8e-8013-b897-dcde1193acaf"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(4)</th><td id="W|jd" class="" style="width:70px">1</td><td id="ImKj" class="" style="width:87px"><mark class="highlight-red"><mark class="highlight-orange_background">-1</mark></mark></td><td id=";^LF" class="">0</td></tr><tr id="195f1e0d-fe8e-8074-ba8b-c2f10592ba70"><th id="NTZ`" class="simple-table-header-color simple-table-header">Z</th><td id="W|jd" class="" style="width:70px">12</td><td id="ImKj" class="" style="width:87px">-12</td><td id=";^LF" class="">0</td></tr></tbody></table><ul id="195f1e0d-fe8e-8035-8cc4-d352503922b1" class="bulleted-list"><li style="list-style-type:disc">El primero que se va a trabajar es el -1 (R4), porque en R3 no hay valor y en R2 tampoco porque es el inverso.</li></ul><p id="195f1e0d-fe8e-8020-b06a-c52c10ace764" class="">
+</p><ol type="1" id="195f1e0d-fe8e-8004-b181-d1ead9dd29a5" class="numbered-list" start="2"><li><strong>Elemento Necesario 2. Resultados de R(2)= </strong><em><strong>1/2 - 0 - 1 - 0 - 1/2 - 0 -0 -75</strong></em></li></ol><p id="195f1e0d-fe8e-80d0-9417-dd1829b71b12" class="">Estos son los valores que se convirtieron, de la fila clave, realizado en el paso 4.</p><p id="195f1e0d-fe8e-8084-9813-ea3ef05336b9" class="">
+</p><ol type="1" id="195f1e0d-fe8e-80c3-ae08-e7b63657c95b" class="numbered-list" start="3"><li><strong>Elemento Necesario 3. Los valores de la Fila que se va a trabajar.</strong></li></ol><table id="195f1e0d-fe8e-801f-ae90-c5034e43fdc6" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-8059-b99b-d5070afc3a9c"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px"></th><th id="^Tus" class="simple-table-header-color simple-table-header" style="width:45px">X(1)</th><th id="@uFv" class="simple-table-header-color simple-table-header" style="width:50px">X(2)</th><th id="`ZiJ" class="block-color-default_background simple-table-header" style="width:46px">X(3)</th><th id="hxcb" class="simple-table-header-color simple-table-header" style="width:48px">U(1)</th><th id="Bwc?" class="simple-table-header-color simple-table-header" style="width:50px">U(2)</th><th id=":sFu" class="simple-table-header-color simple-table-header" style="width:47px">U(3)</th><th id="VGP:" class="simple-table-header-color simple-table-header" style="width:48px">U(4)</th><th id="nbO\" class="simple-table-header-color simple-table-header" style="width:48px">b</th></tr></thead><tbody><tr id="195f1e0d-fe8e-8061-abbf-ee09aafa72d8"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(1)</th><td id="^Tus" class="" style="width:45px">1</td><td id="@uFv" class="" style="width:50px">2</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">—</td><td id="hxcb" class="" style="width:48px">1</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">150</td></tr><tr id="195f1e0d-fe8e-803c-9c7a-dda8d91b7911"><th id="CjzH" class="block-color-default_background simple-table-header" style="width:46px">R(2)</th><td id="^Tus" class="block-color-default_background" style="width:45px">1</td><td id="@uFv" class="block-color-default_background" style="width:50px">—-‘</td><td id="`ZiJ" class="block-color-default_background" style="width:46px"><mark class="highlight-red"><strong>2</strong></mark></td><td id="hxcb" class="block-color-default_background" style="width:48px">0</td><td id="Bwc?" class="block-color-default_background" style="width:50px">1</td><td id=":sFu" class="block-color-default_background" style="width:47px">0</td><td id="VGP:" class="block-color-default_background" style="width:48px">0</td><td id="nbO\" class="block-color-default_background" style="width:48px">150</td></tr><tr id="195f1e0d-fe8e-80e3-8523-da09f486044e"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(3)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">1</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">0</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">1</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">80</td></tr><tr id="195f1e0d-fe8e-808d-8261-de718347661c"><th id="CjzH" class="block-color-orange_background simple-table-header" style="width:46px">R(4)</th><td id="^Tus" class="block-color-orange_background" style="width:45px">2</td><td id="@uFv" class="block-color-orange_background" style="width:50px">3</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">1</td><td id="hxcb" class="block-color-orange_background" style="width:48px">0</td><td id="Bwc?" class="block-color-orange_background" style="width:50px">0</td><td id=":sFu" class="block-color-orange_background" style="width:47px">0</td><td id="VGP:" class="block-color-orange_background" style="width:48px">1</td><td id="nbO\" class="block-color-orange_background" style="width:48px">225</td></tr><tr id="195f1e0d-fe8e-80fa-9224-d3399bb5e82c"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">Z</th><td id="^Tus" class="" style="width:45px">10</td><td id="@uFv" class="" style="width:50px">7</td><td id="`ZiJ" class="block-color-default_background" style="width:46px"><mark class="highlight-red"><mark class="highlight-blue_background"><strong>12</strong></mark></mark></td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">0</td></tr></tbody></table><ul id="195f1e0d-fe8e-80f1-b845-c2722ab9edda" class="bulleted-list"><li style="list-style-type:disc">aquí tenemos los valores que se van a trabajar, o sea la fila en donde se ubica el opuesto R(4).</li></ul><p id="195f1e0d-fe8e-8084-a3e9-d3b397e08bc5" class="">
+</p><h3 id="195f1e0d-fe8e-8025-8883-ecb406e2bf26" class="">Conversion Fila R(4) </h3><table id="195f1e0d-fe8e-80c6-bb74-d21565e63f93" class="simple-table"><tbody><tr id="195f1e0d-fe8e-8032-95ea-c4f787416937"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(1/2)</td><td id="j]lJ" class="" style="width:57px">+2</td><td id="|LoY" class="block-color-red" style="width:68px">= 3/2</td></tr><tr id="195f1e0d-fe8e-8088-9d62-e94935a60c7c"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+3</td><td id="|LoY" class="block-color-red" style="width:68px">= 3</td></tr><tr id="195f1e0d-fe8e-80db-94f4-e606dc10f489"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(1)</td><td id="j]lJ" class="" style="width:57px">+1</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-80a5-8288-e333ada95372"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-8091-bd65-f3170e3646a7"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(1/2)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= -1/2</td></tr><tr id="195f1e0d-fe8e-8095-873f-daa429a41d72"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-801c-81a1-ccd06d8aece6"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+1</td><td id="|LoY" class="block-color-red" style="width:68px">= 1</td></tr><tr id="195f1e0d-fe8e-80fe-ba7e-c3f8e01c39b2"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(75)</td><td id="j]lJ" class="" style="width:57px">+225</td><td id="|LoY" class="block-color-red" style="width:68px">= 150</td></tr></tbody></table><ul id="195f1e0d-fe8e-802a-b1e5-fd809edab871" class="bulleted-list"><li style="list-style-type:disc">El -1 se encuentra en el <strong>elemento necesario 1.</strong></li></ul><ul id="195f1e0d-fe8e-80cb-9b85-ff495cd985e7" class="bulleted-list"><li style="list-style-type:disc">El 1/2 se encuentra en el <strong>elemento necesario 2.</strong></li></ul><ul id="195f1e0d-fe8e-8005-b17a-f8a09dd300a2" class="bulleted-list"><li style="list-style-type:disc">El +2 se encuentra en el <strong>elemento necesario 3.</strong></li></ul><p id="195f1e0d-fe8e-800f-8cde-d0026733745f" class="">
+</p><h2 id="195f1e0d-fe8e-80f4-998b-c31eda684bd0" class="">Resolucion 2.</h2><h2 id="195f1e0d-fe8e-80a3-9d81-fd91692d957e" class="">Elemento necesario 1. </h2><table id="195f1e0d-fe8e-80ff-9723-ec64b965c6ce" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-80f6-8635-e5f7c37b79fc"><th id="NTZ`" class="simple-table-header-color simple-table-header">Restricciones</th><th id="W|jd" class="simple-table-header-color simple-table-header" style="width:70px">X(3)</th><th id="ImKj" class="simple-table-header-color simple-table-header" style="width:87px">Opuesto</th><th id=";^LF" class="simple-table-header-color simple-table-header">Resultado.</th></tr></thead><tbody><tr id="195f1e0d-fe8e-808b-8b37-cfc84bdd514e"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(1)</th><td id="W|jd" class="" style="width:70px">——</td><td id="ImKj" class="" style="width:87px">——</td><td id=";^LF" class="">——</td></tr><tr id="195f1e0d-fe8e-80fb-a013-f8596066f780"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(2)</th><td id="W|jd" class="" style="width:70px">2</td><td id="ImKj" class="" style="width:87px">1/2</td><td id=";^LF" class="">1</td></tr><tr id="195f1e0d-fe8e-8031-8c42-c0715de1533c"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(3)</th><td id="W|jd" class="" style="width:70px">——</td><td id="ImKj" class="" style="width:87px">——-</td><td id=";^LF" class="">——-</td></tr><tr id="195f1e0d-fe8e-80c2-a455-d8c128ad69eb"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(4)</th><td id="W|jd" class="" style="width:70px">1</td><td id="ImKj" class="" style="width:87px"><mark class="highlight-default"><mark class="highlight-default_background">-1</mark></mark></td><td id=";^LF" class="">0</td></tr><tr id="195f1e0d-fe8e-8038-a80f-e21ad2372244"><th id="NTZ`" class="simple-table-header-color simple-table-header">Z</th><td id="W|jd" class="" style="width:70px">12</td><td id="ImKj" class="" style="width:87px"><mark class="highlight-red"><mark class="highlight-orange_background">-12</mark></mark></td><td id=";^LF" class="">0</td></tr></tbody></table><p id="195f1e0d-fe8e-8034-8300-fff4d178a0ba" class="">
+</p><h2 id="195f1e0d-fe8e-805d-b104-eafa05e97d1a" class="">Elemento Necesario 2.</h2><ol type="1" id="195f1e0d-fe8e-8002-a424-f1a8b4830dc6" class="numbered-list" start="2"><li><strong>Elemento Necesario 2. Resultados de R(2)= </strong><em><strong>1/2 - 0 - 1 - 0 - 1/2 - 0 -0 -75</strong></em></li></ol><h2 id="195f1e0d-fe8e-8071-b3a7-cbf00b5b8ec4" class="">Elemento Necesario 3.</h2><table id="195f1e0d-fe8e-804e-b50a-d78f1ba7dcc9" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-803b-9f16-c323380f0f71"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px"></th><th id="^Tus" class="simple-table-header-color simple-table-header" style="width:45px">X(1)</th><th id="@uFv" class="simple-table-header-color simple-table-header" style="width:50px">X(2)</th><th id="`ZiJ" class="block-color-default_background simple-table-header" style="width:46px">X(3)</th><th id="hxcb" class="simple-table-header-color simple-table-header" style="width:48px">U(1)</th><th id="Bwc?" class="simple-table-header-color simple-table-header" style="width:50px">U(2)</th><th id=":sFu" class="simple-table-header-color simple-table-header" style="width:47px">U(3)</th><th id="VGP:" class="simple-table-header-color simple-table-header" style="width:48px">U(4)</th><th id="nbO\" class="simple-table-header-color simple-table-header" style="width:48px">b</th></tr></thead><tbody><tr id="195f1e0d-fe8e-8091-898a-c495fb891871"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(1)</th><td id="^Tus" class="" style="width:45px">1</td><td id="@uFv" class="" style="width:50px">2</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">—</td><td id="hxcb" class="" style="width:48px">1</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">150</td></tr><tr id="195f1e0d-fe8e-80d9-9f20-f911fa581fbd"><th id="CjzH" class="block-color-default_background simple-table-header" style="width:46px">R(2)</th><td id="^Tus" class="block-color-default_background" style="width:45px">1</td><td id="@uFv" class="block-color-default_background" style="width:50px">—-‘</td><td id="`ZiJ" class="block-color-default_background" style="width:46px"><mark class="highlight-red"><strong>2</strong></mark></td><td id="hxcb" class="block-color-default_background" style="width:48px">0</td><td id="Bwc?" class="block-color-default_background" style="width:50px">1</td><td id=":sFu" class="block-color-default_background" style="width:47px">0</td><td id="VGP:" class="block-color-default_background" style="width:48px">0</td><td id="nbO\" class="block-color-default_background" style="width:48px">150</td></tr><tr id="195f1e0d-fe8e-80f7-9451-cdc219a901bc"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(3)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">1</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">0</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">1</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">80</td></tr><tr id="195f1e0d-fe8e-806c-a78d-f3a08ac11d8b"><th id="CjzH" class="block-color-default_background simple-table-header" style="width:46px">R(4)</th><td id="^Tus" class="block-color-default_background" style="width:45px">2</td><td id="@uFv" class="block-color-default_background" style="width:50px">3</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">1</td><td id="hxcb" class="block-color-default_background" style="width:48px">0</td><td id="Bwc?" class="block-color-default_background" style="width:50px">0</td><td id=":sFu" class="block-color-default_background" style="width:47px">0</td><td id="VGP:" class="block-color-default_background" style="width:48px">1</td><td id="nbO\" class="block-color-default_background" style="width:48px">225</td></tr><tr id="195f1e0d-fe8e-8056-89bb-f5dec8cf42d1"><th id="CjzH" class="block-color-orange_background simple-table-header" style="width:46px">Z</th><td id="^Tus" class="block-color-orange_background" style="width:45px">10</td><td id="@uFv" class="block-color-orange_background" style="width:50px">7</td><td id="`ZiJ" class="block-color-default_background" style="width:46px"><mark class="highlight-red"><mark class="highlight-blue_background"><strong>12</strong></mark></mark></td><td id="hxcb" class="block-color-orange_background" style="width:48px">0</td><td id="Bwc?" class="block-color-orange_background" style="width:50px">0</td><td id=":sFu" class="block-color-orange_background" style="width:47px">0</td><td id="VGP:" class="block-color-orange_background" style="width:48px">0</td><td id="nbO\" class="block-color-orange_background" style="width:48px">0</td></tr></tbody></table><h2 id="195f1e0d-fe8e-8057-b107-eef1fd858475" class="">Conversion Fila Z</h2><table id="195f1e0d-fe8e-807c-a37a-f8646e84d9f4" class="simple-table"><tbody><tr id="195f1e0d-fe8e-80ab-90d1-f0c9c3e0461b"><td id="ee@`" class="" style="width:55px">-12</td><td id="pwju" class="" style="width:61px">(1/2)</td><td id="j]lJ" class="" style="width:57px">+10</td><td id="|LoY" class="block-color-red" style="width:68px">= 4</td></tr><tr id="195f1e0d-fe8e-80e6-aa52-e24076b4c141"><td id="ee@`" class="" style="width:55px">-12</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+7</td><td id="|LoY" class="block-color-red" style="width:68px">= 7</td></tr><tr id="195f1e0d-fe8e-80e3-b3e4-d1d4af4fc0e0"><td id="ee@`" class="" style="width:55px">-12</td><td id="pwju" class="" style="width:61px">(1)</td><td id="j]lJ" class="" style="width:57px">+12</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-80d7-b427-e63e7f41474b"><td id="ee@`" class="" style="width:55px">-12</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-80fb-b7b3-e285ddb5b628"><td id="ee@`" class="" style="width:55px">-12</td><td id="pwju" class="" style="width:61px">(1/2)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= -6</td></tr><tr id="195f1e0d-fe8e-8022-9d83-d04a8b7d1137"><td id="ee@`" class="" style="width:55px">-12</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-80d6-87b3-dba58293c1d7"><td id="ee@`" class="" style="width:55px">-12</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-80e9-9414-feab9539b05f"><td id="ee@`" class="" style="width:55px">-12</td><td id="pwju" class="" style="width:61px">(75)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= -900</td></tr></tbody></table><p id="195f1e0d-fe8e-80d7-b122-ee679de0da24" class="">
+</p><hr id="195f1e0d-fe8e-809f-a843-c80ee7560432"/><p id="195f1e0d-fe8e-80da-a223-c8bef82eac79" class="">
+</p><h1 id="195f1e0d-fe8e-8087-9e5f-c279f928817c" class=""><em><mark class="highlight-orange_background"><strong>Paso 7.</strong></mark></em> Observar si los elementos de la fila <em><strong>Función Objetivo Sean Ceros o Negativos.</strong></em></h1><ul id="195f1e0d-fe8e-8091-938f-c971217e7313" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-orange_background"><strong>Paso 7.</strong></mark></em> Observar si los elementos de la fila <em><strong>Función Objetivo Sean Ceros o Negativos</strong></em>: Si se cumple de esta manera, se ha obtenido la maximización del problema. </li></ul><p id="195f1e0d-fe8e-80d0-9e01-f53bc4811c9e" class="">
+</p><table id="195f1e0d-fe8e-80c3-84e9-f54713e9e5d7" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-80c9-abe7-df658246fd5f"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px"></th><th id="^Tus" class="simple-table-header-color simple-table-header" style="width:45px">X(1)</th><th id="@uFv" class="simple-table-header-color simple-table-header" style="width:50px">X(2)</th><th id="`ZiJ" class="block-color-default_background simple-table-header" style="width:46px">X(3)</th><th id="hxcb" class="simple-table-header-color simple-table-header" style="width:48px">U(1)</th><th id="Bwc?" class="simple-table-header-color simple-table-header" style="width:50px">U(2)</th><th id=":sFu" class="simple-table-header-color simple-table-header" style="width:47px">U(3)</th><th id="VGP:" class="simple-table-header-color simple-table-header" style="width:48px">U(4)</th><th id="nbO\" class="simple-table-header-color simple-table-header" style="width:48px">b</th></tr></thead><tbody><tr id="195f1e0d-fe8e-803a-a8bb-f4dda46adae9"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(1)</th><td id="^Tus" class="" style="width:45px">1</td><td id="@uFv" class="" style="width:50px">2</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">—</td><td id="hxcb" class="" style="width:48px">1</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">0</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">150</td></tr><tr id="195f1e0d-fe8e-80f6-b829-c27d88acba6e"><th id="CjzH" class="block-color-default_background simple-table-header" style="width:46px">R(2)</th><td id="^Tus" class="block-color-default_background" style="width:45px">1/2</td><td id="@uFv" class="block-color-default_background" style="width:50px">—-‘</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">1</td><td id="hxcb" class="block-color-default_background" style="width:48px">0</td><td id="Bwc?" class="block-color-default_background" style="width:50px">1/2</td><td id=":sFu" class="block-color-default_background" style="width:47px">0</td><td id="VGP:" class="block-color-default_background" style="width:48px">0</td><td id="nbO\" class="block-color-default_background" style="width:48px">75</td></tr><tr id="195f1e0d-fe8e-803a-b54c-e332d4350435"><th id="CjzH" class="simple-table-header-color simple-table-header" style="width:46px">R(3)</th><td id="^Tus" class="" style="width:45px">2</td><td id="@uFv" class="" style="width:50px">1</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">0</td><td id="hxcb" class="" style="width:48px">0</td><td id="Bwc?" class="" style="width:50px">0</td><td id=":sFu" class="" style="width:47px">1</td><td id="VGP:" class="" style="width:48px">0</td><td id="nbO\" class="" style="width:48px">80</td></tr><tr id="195f1e0d-fe8e-804b-b7a0-ccbbacf35cc6"><th id="CjzH" class="block-color-default_background simple-table-header" style="width:46px">R(4)</th><td id="^Tus" class="block-color-default_background" style="width:45px">3/2</td><td id="@uFv" class="block-color-default_background" style="width:50px">3</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">0</td><td id="hxcb" class="block-color-default_background" style="width:48px">0</td><td id="Bwc?" class="block-color-default_background" style="width:50px">- 1/2</td><td id=":sFu" class="block-color-default_background" style="width:47px">0</td><td id="VGP:" class="block-color-default_background" style="width:48px">1</td><td id="nbO\" class="block-color-default_background" style="width:48px">150</td></tr><tr id="195f1e0d-fe8e-8030-9e39-d35c71072e4e"><th id="CjzH" class="block-color-orange_background simple-table-header" style="width:46px">Z</th><td id="^Tus" class="block-color-orange_background" style="width:45px">4</td><td id="@uFv" class="block-color-orange_background" style="width:50px">7</td><td id="`ZiJ" class="block-color-default_background" style="width:46px">0</td><td id="hxcb" class="block-color-orange_background" style="width:48px">0</td><td id="Bwc?" class="block-color-orange_background" style="width:50px">-6</td><td id=":sFu" class="block-color-orange_background" style="width:47px">0</td><td id="VGP:" class="block-color-orange_background" style="width:48px">0</td><td id="nbO\" class="block-color-orange_background" style="width:48px">-900</td></tr></tbody></table><ul id="195f1e0d-fe8e-8062-bae7-db8b3010b229" class="bulleted-list"><li style="list-style-type:disc">debemos de actualizar la tabla con los nuevos datos.</li></ul><ul id="195f1e0d-fe8e-8058-ae7a-e5246ceb5758" class="bulleted-list"><li style="list-style-type:disc">R(2) los valores que se encontraron en el paso 4.</li></ul><ul id="195f1e0d-fe8e-8042-a7c6-e1a7586bb247" class="bulleted-list"><li style="list-style-type:disc">R(4) y Z los valores que se encontraron en el paso 6.</li></ul><p id="195f1e0d-fe8e-8097-bef9-faae96ad09b6" class="">
+</p><h1 id="195f1e0d-fe8e-80b2-989e-f971214ddd78" class=""><em><mark class="highlight-orange_background"><strong>Paso 8.</strong></mark></em>  si no se da la condición del paso 7.</h1><ul id="195f1e0d-fe8e-80c2-8593-c3b0d80e3f1b" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-orange_background"><strong>Paso 8.</strong></mark></em>  si no se da la condición del paso 7, se debe repetir los pasos del 1 al 6; hasta obtener la condición del paso 7. </li></ul><p id="195f1e0d-fe8e-80c5-bfc2-f37984062fb8" class="">
+</p><hr id="195f1e0d-fe8e-80ed-8048-ef387ef37a6a"/><p id="195f1e0d-fe8e-808f-959a-e2473abdf761" class="">
+</p><h1 id="195f1e0d-fe8e-80a0-9701-ea4c5a15a1fa" class=""><em><mark class="highlight-orange_background"><strong>Paso 1:</strong></mark></em> <strong>Seleccionar la columna clave.</strong></h1><table id="195f1e0d-fe8e-8017-bc3d-ec836c24aa0b" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-80d7-9eb0-ec5f42d31b8c"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px"></th><th id="|AgR" class="simple-table-header-color simple-table-header" style="width:47px">X(1)</th><th id="_=iJ" class="block-color-orange_background simple-table-header" style="width:46px">X(2)</th><th id="jID=" class="simple-table-header-color simple-table-header" style="width:52px">X(3)</th><th id="eaaA" class="simple-table-header-color simple-table-header" style="width:51px">U(1)</th><th id="Bk=B" class="simple-table-header-color simple-table-header" style="width:47px">U(2)</th><th id="xMtu" class="simple-table-header-color simple-table-header" style="width:51px">U(3)</th><th id="~ejj" class="simple-table-header-color simple-table-header" style="width:47px">U(4)</th><th id="yzuP" class="simple-table-header-color simple-table-header" style="width:59px">b</th></tr></thead><tbody><tr id="195f1e0d-fe8e-8060-9d88-e428d5975e91"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(1)</th><td id="|AgR" class="" style="width:47px">1</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">2</td><td id="jID=" class="" style="width:52px">——</td><td id="eaaA" class="" style="width:51px">1</td><td id="Bk=B" class="" style="width:47px">0</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">150</td></tr><tr id="195f1e0d-fe8e-803b-8e6c-d5699b64611a"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(2)</th><td id="|AgR" class="" style="width:47px">1/2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">—-</td><td id="jID=" class="" style="width:52px">1</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">1/2</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">75</td></tr><tr id="195f1e0d-fe8e-8015-91df-fc6d2c6185b0"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(3)</th><td id="|AgR" class="" style="width:47px">2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">1</td><td id="jID=" class="" style="width:52px">0</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">0</td><td id="xMtu" class="" style="width:51px">1</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">80</td></tr><tr id="195f1e0d-fe8e-804f-8e37-fa9c0cbc8d60"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(4)</th><td id="|AgR" class="" style="width:47px">3/2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">3</td><td id="jID=" class="" style="width:52px">0</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">-1/2</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">1</td><td id="yzuP" class="" style="width:59px">150</td></tr><tr id="195f1e0d-fe8e-80a5-94b1-fb6d3f511335"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">Z</th><td id="|AgR" class="" style="width:47px">4</td><td id="_=iJ" class="block-color-orange_background" style="width:46px"><mark class="highlight-red">7</mark></td><td id="jID=" class="" style="width:52px">0</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">-6</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">-900</td></tr></tbody></table><p id="195f1e0d-fe8e-80f8-9670-d2f183d0c94d" class="">
+</p><p id="195f1e0d-fe8e-8008-9f88-d6b35a74b97a" class="">
+</p><h1 id="195f1e0d-fe8e-80b3-a60a-c3d70bc635fb" class=""><em><mark class="highlight-orange_background"><strong>Paso 2:</strong></mark></em> <strong>Seleccionar la Fila Clave.</strong></h1><table id="195f1e0d-fe8e-8098-a8e7-d90fcfa2cc39" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-8018-ac89-f3f1a476ceff"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px"></th><th id="|AgR" class="simple-table-header-color simple-table-header" style="width:47px">X(1)</th><th id="_=iJ" class="block-color-orange_background simple-table-header" style="width:46px">X(2)</th><th id="jID=" class="simple-table-header-color simple-table-header" style="width:52px">X(3)</th><th id="eaaA" class="simple-table-header-color simple-table-header" style="width:51px">U(1)</th><th id="Bk=B" class="simple-table-header-color simple-table-header" style="width:47px">U(2)</th><th id="xMtu" class="simple-table-header-color simple-table-header" style="width:51px">U(3)</th><th id="~ejj" class="simple-table-header-color simple-table-header" style="width:47px">U(4)</th><th id="yzuP" class="simple-table-header-color simple-table-header" style="width:59px">b</th><th id="l`&lt;u" class="simple-table-header-color simple-table-header" style="width:68px"></th><th id="&gt;P;]" class="simple-table-header-color simple-table-header"></th></tr></thead><tbody><tr id="195f1e0d-fe8e-801f-b337-f96d441d6ab5"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(1)</th><td id="|AgR" class="" style="width:47px">1</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">2</td><td id="jID=" class="" style="width:52px">——</td><td id="eaaA" class="" style="width:51px">1</td><td id="Bk=B" class="" style="width:47px">0</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">150</td><td id="l`&lt;u" class="" style="width:68px">150 / 2</td><td id="&gt;P;]" class="">75</td></tr><tr id="195f1e0d-fe8e-802a-b924-d0968390a090"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(2)</th><td id="|AgR" class="" style="width:47px">1/2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">—-</td><td id="jID=" class="" style="width:52px">1</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">1/2</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">75</td><td id="l`&lt;u" class="" style="width:68px"></td><td id="&gt;P;]" class="">——-</td></tr><tr id="195f1e0d-fe8e-8099-a359-f0c31c3e8172"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(3)</th><td id="|AgR" class="" style="width:47px">2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">1</td><td id="jID=" class="" style="width:52px">0</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">0</td><td id="xMtu" class="" style="width:51px">1</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">80</td><td id="l`&lt;u" class="" style="width:68px">80 / 1</td><td id="&gt;P;]" class="">80</td></tr><tr id="195f1e0d-fe8e-8078-95ac-dc8f42325069"><th id="NJwf" class="block-color-orange_background simple-table-header" style="width:55px">R(4)</th><td id="|AgR" class="block-color-orange_background" style="width:47px">3/2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px"><mark class="highlight-red"><mark class="highlight-blue_background">3</mark></mark></td><td id="jID=" class="block-color-orange_background" style="width:52px">0</td><td id="eaaA" class="block-color-orange_background" style="width:51px">0</td><td id="Bk=B" class="block-color-orange_background" style="width:47px">-1/2</td><td id="xMtu" class="block-color-orange_background" style="width:51px">0</td><td id="~ejj" class="block-color-orange_background" style="width:47px">1</td><td id="yzuP" class="block-color-orange_background" style="width:59px">150</td><td id="l`&lt;u" class="block-color-orange_background" style="width:68px">150 / 3</td><td id="&gt;P;]" class="block-color-orange_background"><mark class="highlight-red">50</mark></td></tr><tr id="195f1e0d-fe8e-80dc-9b3c-c8f03c9971ec"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">Z</th><td id="|AgR" class="" style="width:47px">4</td><td id="_=iJ" class="block-color-orange_background" style="width:46px"><mark class="highlight-red">7</mark></td><td id="jID=" class="" style="width:52px">0</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">-6</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">-900</td><td id="l`&lt;u" class="" style="width:68px"></td><td id="&gt;P;]" class="">——</td></tr></tbody></table><p id="195f1e0d-fe8e-80a8-975d-f30ec8db1b7c" class="">
+</p><h1 id="195f1e0d-fe8e-808f-8ae0-c106e6bf3e2d" class=""><em><mark class="highlight-orange_background"><strong>Paso 3.</strong></mark></em> Sacar el inverso del numero clave.</h1><table id="195f1e0d-fe8e-80b9-99a7-d1f3e52336b8" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-806b-8e58-dc46218d3e69"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px"></th><th id="|AgR" class="simple-table-header-color simple-table-header" style="width:47px">X(1)</th><th id="_=iJ" class="block-color-orange_background simple-table-header" style="width:46px">X(2)</th><th id="jID=" class="simple-table-header-color simple-table-header" style="width:52px">X(3)</th><th id="eaaA" class="simple-table-header-color simple-table-header" style="width:51px">U(1)</th><th id="Bk=B" class="simple-table-header-color simple-table-header" style="width:47px">U(2)</th><th id="xMtu" class="simple-table-header-color simple-table-header" style="width:51px">U(3)</th><th id="~ejj" class="simple-table-header-color simple-table-header" style="width:47px">U(4)</th><th id="yzuP" class="simple-table-header-color simple-table-header" style="width:59px">b</th></tr></thead><tbody><tr id="195f1e0d-fe8e-805d-b6bd-ff22eaa37fcd"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(1)</th><td id="|AgR" class="" style="width:47px">1</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">2</td><td id="jID=" class="" style="width:52px">——</td><td id="eaaA" class="" style="width:51px">1</td><td id="Bk=B" class="" style="width:47px">0</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">150</td></tr><tr id="195f1e0d-fe8e-80a2-8150-fc57e8802e09"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(2)</th><td id="|AgR" class="" style="width:47px">1/2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">—-</td><td id="jID=" class="" style="width:52px">1</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">1/2</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">75</td></tr><tr id="195f1e0d-fe8e-80b6-97f3-f3142fe4a0f3"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(3)</th><td id="|AgR" class="" style="width:47px">2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">1</td><td id="jID=" class="" style="width:52px">0</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">0</td><td id="xMtu" class="" style="width:51px">1</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">80</td></tr><tr id="195f1e0d-fe8e-8023-ba71-d3ab4163f818"><th id="NJwf" class="block-color-orange_background simple-table-header" style="width:55px">R(4)</th><td id="|AgR" class="block-color-orange_background" style="width:47px">3/2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px"><mark class="highlight-red"><mark class="highlight-blue_background">3</mark></mark></td><td id="jID=" class="block-color-orange_background" style="width:52px">0</td><td id="eaaA" class="block-color-orange_background" style="width:51px">0</td><td id="Bk=B" class="block-color-orange_background" style="width:47px">-1/2</td><td id="xMtu" class="block-color-orange_background" style="width:51px">0</td><td id="~ejj" class="block-color-orange_background" style="width:47px">1</td><td id="yzuP" class="block-color-orange_background" style="width:59px">150</td></tr><tr id="195f1e0d-fe8e-80df-b927-edf90abb0d04"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">Z</th><td id="|AgR" class="" style="width:47px">4</td><td id="_=iJ" class="block-color-orange_background" style="width:46px"><mark class="highlight-red">7</mark></td><td id="jID=" class="" style="width:52px">0</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">-6</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">-900</td></tr></tbody></table><p id="195f1e0d-fe8e-806c-9b34-e7691cc39dc1" class="">Inverso = 1 dividido en 3 = <mark class="highlight-red"><strong>1/3</strong></mark></p><p id="195f1e0d-fe8e-808b-9c60-c6b6389442da" class="">
+</p><h1 id="195f1e0d-fe8e-8060-96be-e64954ad5ce4" class=""><em><mark class="highlight-orange_background"><strong>Paso 4:</strong></mark></em> <em>Conversión de la Fila Clave.</em></h1><table id="195f1e0d-fe8e-80b1-931e-f09b5f86378f" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-80ba-ace5-dee1fa303f11"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px"></th><th id="|AgR" class="simple-table-header-color simple-table-header" style="width:47px">X(1)</th><th id="_=iJ" class="block-color-orange_background simple-table-header" style="width:46px">X(2)</th><th id="jID=" class="simple-table-header-color simple-table-header" style="width:52px">X(3)</th><th id="eaaA" class="simple-table-header-color simple-table-header" style="width:51px">U(1)</th><th id="Bk=B" class="simple-table-header-color simple-table-header" style="width:47px">U(2)</th><th id="xMtu" class="simple-table-header-color simple-table-header" style="width:51px">U(3)</th><th id="~ejj" class="simple-table-header-color simple-table-header" style="width:47px">U(4)</th><th id="yzuP" class="simple-table-header-color simple-table-header" style="width:59px">b</th></tr></thead><tbody><tr id="195f1e0d-fe8e-8070-ad63-fed542f00c45"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(1)</th><td id="|AgR" class="" style="width:47px">1</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">2</td><td id="jID=" class="" style="width:52px">——</td><td id="eaaA" class="" style="width:51px">1</td><td id="Bk=B" class="" style="width:47px">0</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">150</td></tr><tr id="195f1e0d-fe8e-80d1-88cc-e6a50a805c67"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(2)</th><td id="|AgR" class="" style="width:47px">1/2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">—-</td><td id="jID=" class="" style="width:52px">1</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">1/2</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">75</td></tr><tr id="195f1e0d-fe8e-80ed-93ba-e2771c34afa8"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(3)</th><td id="|AgR" class="" style="width:47px">2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">1</td><td id="jID=" class="" style="width:52px">0</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">0</td><td id="xMtu" class="" style="width:51px">1</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">80</td></tr><tr id="195f1e0d-fe8e-8015-832b-e40d7007be48"><th id="NJwf" class="block-color-orange_background simple-table-header" style="width:55px">R(4)</th><td id="|AgR" class="block-color-orange_background" style="width:47px">3/2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px"><mark class="highlight-red"><mark class="highlight-blue_background">3</mark></mark></td><td id="jID=" class="block-color-orange_background" style="width:52px">0</td><td id="eaaA" class="block-color-orange_background" style="width:51px">0</td><td id="Bk=B" class="block-color-orange_background" style="width:47px">-1/2</td><td id="xMtu" class="block-color-orange_background" style="width:51px">0</td><td id="~ejj" class="block-color-orange_background" style="width:47px">1</td><td id="yzuP" class="block-color-orange_background" style="width:59px">150</td></tr><tr id="195f1e0d-fe8e-80ae-a047-e327c492be80"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">Z</th><td id="|AgR" class="" style="width:47px">4</td><td id="_=iJ" class="block-color-orange_background" style="width:46px"><mark class="highlight-red">7</mark></td><td id="jID=" class="" style="width:52px">0</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">-6</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">-900</td></tr></tbody></table><p id="195f1e0d-fe8e-80b7-9297-c71ba284bfbc" class="">1/3 * 3/2 =<mark class="highlight-red"> 1/2</mark></p><p id="195f1e0d-fe8e-80e5-a2b2-fefe4fc88a1e" class="">1/3 * 3 = <mark class="highlight-red">1</mark></p><p id="195f1e0d-fe8e-806e-8ca0-c4293e6ba6a3" class="">1/3 * 0 = <mark class="highlight-red">0</mark></p><p id="195f1e0d-fe8e-8036-ac7c-c08dcd59a817" class="">1/3 * 0 = <mark class="highlight-red">0</mark></p><p id="195f1e0d-fe8e-804a-986a-c0b0870a07e9" class="">1/3 * -1/2 = <mark class="highlight-red">-1/6</mark></p><p id="195f1e0d-fe8e-801b-93be-dda17636300e" class="">1/3 * 0 = <mark class="highlight-red">0</mark></p><p id="195f1e0d-fe8e-80a6-9c17-cac2b83520c1" class="">1/3 * 1 = <mark class="highlight-red">1/3</mark></p><p id="195f1e0d-fe8e-80e5-80ef-c64b82502473" class="">1/3 *150 = <mark class="highlight-red">50</mark></p><p id="195f1e0d-fe8e-80aa-801f-ed63ec20ddaf" class="">
+</p><p id="195f1e0d-fe8e-809a-b2f1-c4048b6bebdc" class="">Resultados de conversion Fila Clave R(4) = <em><strong>1/2 - 1 - 0 - 0 - (-1/6) - 0 - 1/3 - 50</strong></em> </p><p id="195f1e0d-fe8e-80b5-bad3-fd3a26cf409d" class="">
+</p><h1 id="195f1e0d-fe8e-808e-b8cf-c8dc1e070e20" class=""><em><mark class="highlight-orange_background"><strong>Paso 5:</strong></mark></em> <strong>Conversion Elementos Columna Clave.</strong></h1><table id="195f1e0d-fe8e-80cf-a6f7-d0d50ce090bd" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-8014-ba20-c610a00a71df"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px"></th><th id="|AgR" class="simple-table-header-color simple-table-header" style="width:47px">X(1)</th><th id="_=iJ" class="block-color-orange_background simple-table-header" style="width:46px">X(2)</th><th id="jID=" class="simple-table-header-color simple-table-header" style="width:52px">X(3)</th><th id="eaaA" class="simple-table-header-color simple-table-header" style="width:51px">U(1)</th><th id="Bk=B" class="simple-table-header-color simple-table-header" style="width:47px">U(2)</th><th id="xMtu" class="simple-table-header-color simple-table-header" style="width:51px">U(3)</th><th id="~ejj" class="simple-table-header-color simple-table-header" style="width:47px">U(4)</th><th id="yzuP" class="simple-table-header-color simple-table-header" style="width:59px">b</th></tr></thead><tbody><tr id="195f1e0d-fe8e-803c-b3a9-f3ca40ff2f78"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(1)</th><td id="|AgR" class="" style="width:47px">1</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">2</td><td id="jID=" class="" style="width:52px">——</td><td id="eaaA" class="" style="width:51px">1</td><td id="Bk=B" class="" style="width:47px">0</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">150</td></tr><tr id="195f1e0d-fe8e-80f6-b9c3-d6d331641e7b"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(2)</th><td id="|AgR" class="" style="width:47px">1/2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">—-</td><td id="jID=" class="" style="width:52px">1</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">1/2</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">75</td></tr><tr id="195f1e0d-fe8e-8053-bb2f-f2e34baec946"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(3)</th><td id="|AgR" class="" style="width:47px">2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px">1</td><td id="jID=" class="" style="width:52px">0</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">0</td><td id="xMtu" class="" style="width:51px">1</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">80</td></tr><tr id="195f1e0d-fe8e-80e1-8ef0-e2bab77d4f1d"><th id="NJwf" class="block-color-orange_background simple-table-header" style="width:55px">R(4)</th><td id="|AgR" class="block-color-orange_background" style="width:47px">3/2</td><td id="_=iJ" class="block-color-orange_background" style="width:46px"><mark class="highlight-red"><mark class="highlight-blue_background">3</mark></mark></td><td id="jID=" class="block-color-orange_background" style="width:52px">0</td><td id="eaaA" class="block-color-orange_background" style="width:51px">0</td><td id="Bk=B" class="block-color-orange_background" style="width:47px">-1/2</td><td id="xMtu" class="block-color-orange_background" style="width:51px">0</td><td id="~ejj" class="block-color-orange_background" style="width:47px">1</td><td id="yzuP" class="block-color-orange_background" style="width:59px">150</td></tr><tr id="195f1e0d-fe8e-8044-98d0-d3b0238fce42"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">Z</th><td id="|AgR" class="" style="width:47px">4</td><td id="_=iJ" class="block-color-orange_background" style="width:46px"><mark class="highlight-red">7</mark></td><td id="jID=" class="" style="width:52px">0</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:47px">-6</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">-900</td></tr></tbody></table><p id="195f1e0d-fe8e-80b6-9ac1-fec8f3d4bb4f" class="">
+</p><table id="195f1e0d-fe8e-8030-816a-eb87e7959901" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-807d-ae54-ef88ff3c0504"><th id="NTZ`" class="simple-table-header-color simple-table-header">Restricciones</th><th id="W|jd" class="simple-table-header-color simple-table-header" style="width:70px">X(2)</th><th id="ImKj" class="simple-table-header-color simple-table-header" style="width:87px">Opuesto</th><th id=";^LF" class="simple-table-header-color simple-table-header">Resultado.</th></tr></thead><tbody><tr id="195f1e0d-fe8e-8066-b352-f457d92b9c08"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(1)</th><td id="W|jd" class="" style="width:70px">2</td><td id="ImKj" class="" style="width:87px">-2</td><td id=";^LF" class="">0</td></tr><tr id="195f1e0d-fe8e-80bb-b62e-fcb173ff799e"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(2)</th><td id="W|jd" class="" style="width:70px">——-</td><td id="ImKj" class="" style="width:87px">——</td><td id=";^LF" class="">——</td></tr><tr id="195f1e0d-fe8e-8080-98ce-cb936e1ed856"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(3)</th><td id="W|jd" class="" style="width:70px">1</td><td id="ImKj" class="" style="width:87px">-1</td><td id=";^LF" class="">0</td></tr><tr id="195f1e0d-fe8e-80c8-8ce5-f046547ee86a"><th id="NTZ`" class="simple-table-header-color simple-table-header">R(4)</th><td id="W|jd" class="" style="width:70px">3</td><td id="ImKj" class="" style="width:87px">1/3</td><td id=";^LF" class="">1</td></tr><tr id="195f1e0d-fe8e-80cd-9b9e-e3ba8c111595"><th id="NTZ`" class="simple-table-header-color simple-table-header">Z</th><td id="W|jd" class="" style="width:70px">7</td><td id="ImKj" class="" style="width:87px">-7</td><td id=";^LF" class="">0</td></tr></tbody></table><p id="195f1e0d-fe8e-801f-a319-fab6d1f3678f" class="">
+</p><h1 id="195f1e0d-fe8e-8015-b716-decb134f46a2" class=""><em><mark class="highlight-orange_background"><strong>Paso 6:</strong></mark></em> Conversion de las Otras Filas de la Matriz.</h1><p id="195f1e0d-fe8e-80e6-b2a2-d6ad7f9504a8" class="">
+</p><h2 id="195f1e0d-fe8e-8057-bfb1-d7e7331a9c38" class="">Conversion Fila R(1).</h2><table id="195f1e0d-fe8e-80b0-90b2-e4b799a703b0" class="simple-table"><tbody><tr id="195f1e0d-fe8e-80be-9a05-cdbf02ff5907"><td id="ee@`" class="" style="width:55px">-2</td><td id="pwju" class="" style="width:61px">(1/2)</td><td id="j]lJ" class="" style="width:57px">+1</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-8018-8fed-c1fe26f87e07"><td id="ee@`" class="" style="width:55px">-2</td><td id="pwju" class="" style="width:61px">(1)</td><td id="j]lJ" class="" style="width:57px">+2</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-8078-9223-ecf758b282ea"><td id="ee@`" class="" style="width:55px">-2</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">—-</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-80a6-9fb8-fee6191a8668"><td id="ee@`" class="" style="width:55px">-2</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+1</td><td id="|LoY" class="block-color-red" style="width:68px">= 1</td></tr><tr id="195f1e0d-fe8e-809c-8a01-dc1bf1a0c45f"><td id="ee@`" class="" style="width:55px">-2</td><td id="pwju" class="" style="width:61px">(-1/6)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= 1/3</td></tr><tr id="195f1e0d-fe8e-8096-b3e5-d1f80c628933"><td id="ee@`" class="" style="width:55px">-2</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-803a-859e-cfc89b3adf0e"><td id="ee@`" class="" style="width:55px">-2</td><td id="pwju" class="" style="width:61px">(1/3)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= -2/3</td></tr><tr id="195f1e0d-fe8e-800e-a85f-fa843d853382"><td id="ee@`" class="" style="width:55px">-2</td><td id="pwju" class="" style="width:61px">(50)</td><td id="j]lJ" class="" style="width:57px">+150</td><td id="|LoY" class="block-color-red" style="width:68px">= 50</td></tr></tbody></table><p id="195f1e0d-fe8e-8097-9d57-d205dd764dba" class="">
+</p><h2 id="195f1e0d-fe8e-80c1-b860-e05ea731c3fc" class="">Conversion Fila R(3)</h2><table id="195f1e0d-fe8e-8032-95ee-c55c851afc68" class="simple-table"><tbody><tr id="195f1e0d-fe8e-80dc-9407-f9545ed798a1"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(1/2)</td><td id="j]lJ" class="" style="width:57px">+2</td><td id="|LoY" class="block-color-red" style="width:68px">= 3/2</td></tr><tr id="195f1e0d-fe8e-8009-bf12-c76e9e235f18"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(1)</td><td id="j]lJ" class="" style="width:57px">+1</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-8065-a813-cb7df5d2ae55"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-8079-8a6b-caa947f54516"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= 0</td></tr><tr id="195f1e0d-fe8e-8008-9208-d388a6d129f1"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(-1/6)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= 1/6</td></tr><tr id="195f1e0d-fe8e-80b5-bcf5-f092b12338c4"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+1</td><td id="|LoY" class="block-color-red" style="width:68px">= 1</td></tr><tr id="195f1e0d-fe8e-80d3-952b-c9aaa994a610"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(1/3)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:68px">= -1/3</td></tr><tr id="195f1e0d-fe8e-8035-b487-c74cc203483a"><td id="ee@`" class="" style="width:55px">-1</td><td id="pwju" class="" style="width:61px">(50)</td><td id="j]lJ" class="" style="width:57px">+80</td><td id="|LoY" class="block-color-red" style="width:68px">= 30</td></tr></tbody></table><p id="195f1e0d-fe8e-808e-a083-e2fcd6b0d8e7" class="">
+</p><h2 id="195f1e0d-fe8e-8077-9b26-f6d87b6597cc" class="">Conversion Fila Z</h2><table id="195f1e0d-fe8e-80a6-8960-c4672dff0b5c" class="simple-table"><tbody><tr id="195f1e0d-fe8e-806e-b00a-dac5bf51a9be"><td id="ee@`" class="" style="width:55px">-7</td><td id="pwju" class="" style="width:61px">(1/2)</td><td id="j]lJ" class="" style="width:57px">+4</td><td id="|LoY" class="block-color-red" style="width:74px">= 1/2</td></tr><tr id="195f1e0d-fe8e-809b-8de9-eea9ded5fdf4"><td id="ee@`" class="" style="width:55px">-7</td><td id="pwju" class="" style="width:61px">(1)</td><td id="j]lJ" class="" style="width:57px">+7</td><td id="|LoY" class="block-color-red" style="width:74px">= 0</td></tr><tr id="195f1e0d-fe8e-80a4-ab3c-d30efe0faa17"><td id="ee@`" class="" style="width:55px">-7</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:74px">= 0</td></tr><tr id="195f1e0d-fe8e-8004-9ac3-fd34f4e292eb"><td id="ee@`" class="" style="width:55px">-7</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:74px">= 0</td></tr><tr id="195f1e0d-fe8e-80f5-908c-f1eec13ccef5"><td id="ee@`" class="" style="width:55px">-7</td><td id="pwju" class="" style="width:61px">(-1/6)</td><td id="j]lJ" class="" style="width:57px">+-6</td><td id="|LoY" class="block-color-red" style="width:74px">= -29/6</td></tr><tr id="195f1e0d-fe8e-8009-a7cd-ce5ecd845ccb"><td id="ee@`" class="" style="width:55px">-7</td><td id="pwju" class="" style="width:61px">(0)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:74px">= 0</td></tr><tr id="195f1e0d-fe8e-80ab-a19d-f5426e7ad470"><td id="ee@`" class="" style="width:55px">-7</td><td id="pwju" class="" style="width:61px">(1/3)</td><td id="j]lJ" class="" style="width:57px">+0</td><td id="|LoY" class="block-color-red" style="width:74px">= -7/3</td></tr><tr id="195f1e0d-fe8e-80d5-ae57-f614ba5e5042"><td id="ee@`" class="" style="width:55px">-7</td><td id="pwju" class="" style="width:61px">(50)</td><td id="j]lJ" class="" style="width:57px">+-900</td><td id="|LoY" class="block-color-red" style="width:74px">= -1250</td></tr></tbody></table><p id="195f1e0d-fe8e-809f-b977-fc0686c7e5bb" class="">
+</p><h1 id="195f1e0d-fe8e-80ad-a1c2-c4c5061325f7" class=""><em><mark class="highlight-orange_background"><strong>Paso 7.</strong></mark></em> Observar si los Elementos de la Fila <em><strong>Función Objetivo Sean Ceros o Negativos.</strong></em></h1><p id="195f1e0d-fe8e-8005-865c-feef5cdb4906" class="">
+</p><p id="195f1e0d-fe8e-8014-b201-d3ffdd8fe6f4" class="">
+</p><table id="195f1e0d-fe8e-8061-9ef8-f2abd8515f6d" class="simple-table"><thead class="simple-table-header"><tr id="195f1e0d-fe8e-80e3-9935-c290d58597ba"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px"></th><th id="|AgR" class="simple-table-header-color simple-table-header" style="width:47px">X(1)</th><th id="_=iJ" class="block-color-default_background simple-table-header" style="width:46px">X(2)</th><th id="jID=" class="simple-table-header-color simple-table-header" style="width:52px">X(3)</th><th id="eaaA" class="simple-table-header-color simple-table-header" style="width:51px">U(1)</th><th id="Bk=B" class="simple-table-header-color simple-table-header" style="width:54px">U(2)</th><th id="xMtu" class="simple-table-header-color simple-table-header" style="width:51px">U(3)</th><th id="~ejj" class="simple-table-header-color simple-table-header" style="width:47px">U(4)</th><th id="yzuP" class="simple-table-header-color simple-table-header" style="width:59px">b</th></tr></thead><tbody><tr id="195f1e0d-fe8e-8026-9dfa-fb8dfe84d2b8"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(1)</th><td id="|AgR" class="" style="width:47px">0</td><td id="_=iJ" class="block-color-default_background" style="width:46px">0</td><td id="jID=" class="" style="width:52px">——</td><td id="eaaA" class="" style="width:51px">1</td><td id="Bk=B" class="" style="width:54px">1/3</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">-2/3</td><td id="yzuP" class="" style="width:59px">50</td></tr><tr id="195f1e0d-fe8e-8039-8063-ddf5684fd1af"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(2)</th><td id="|AgR" class="" style="width:47px">1/2</td><td id="_=iJ" class="block-color-default_background" style="width:46px">—-</td><td id="jID=" class="" style="width:52px">1</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:54px">1/2</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">0</td><td id="yzuP" class="" style="width:59px">75</td></tr><tr id="195f1e0d-fe8e-8022-b9cb-f37434205774"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">R(3)</th><td id="|AgR" class="" style="width:47px">3/2</td><td id="_=iJ" class="block-color-default_background" style="width:46px">0</td><td id="jID=" class="" style="width:52px">0</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:54px">1/6</td><td id="xMtu" class="" style="width:51px">1</td><td id="~ejj" class="" style="width:47px">-1/3</td><td id="yzuP" class="" style="width:59px">30</td></tr><tr id="195f1e0d-fe8e-809f-8286-fdcad9f3f02e"><th id="NJwf" class="block-color-default_background simple-table-header" style="width:55px">R(4)</th><td id="|AgR" class="block-color-default_background" style="width:47px">1/2</td><td id="_=iJ" class="block-color-default_background" style="width:46px">1</td><td id="jID=" class="block-color-default_background" style="width:52px">0</td><td id="eaaA" class="block-color-default_background" style="width:51px">0</td><td id="Bk=B" class="block-color-default_background" style="width:54px">-1/6</td><td id="xMtu" class="block-color-default_background" style="width:51px">0</td><td id="~ejj" class="block-color-default_background" style="width:47px">1/3</td><td id="yzuP" class="block-color-default_background" style="width:59px">50</td></tr><tr id="195f1e0d-fe8e-803a-b387-cbdc78358ce7"><th id="NJwf" class="simple-table-header-color simple-table-header" style="width:55px">Z</th><td id="|AgR" class="" style="width:47px">1/2</td><td id="_=iJ" class="block-color-default_background" style="width:46px">0</td><td id="jID=" class="" style="width:52px">0</td><td id="eaaA" class="" style="width:51px">0</td><td id="Bk=B" class="" style="width:54px">-29/6</td><td id="xMtu" class="" style="width:51px">0</td><td id="~ejj" class="" style="width:47px">-7/3</td><td id="yzuP" class="" style="width:59px">-1250</td></tr></tbody></table><p id="195f1e0d-fe8e-80bf-be7b-e07ac192a5b0" class="">
+</p><p id="195f1e0d-fe8e-8068-b880-c8b9840c45d3" class="">
+</p><p id="195f1e0d-fe8e-8076-859d-d6f002cf2cfe" class="">
+</p><p id="195f1e0d-fe8e-800e-8b49-f6d59cb13739" class="">
+</p><p id="195f1e0d-fe8e-80ab-9f6e-c2cb687ab21d" class="">
+</p><p id="195f1e0d-fe8e-80d7-a309-e410a234c75d" class="">
+</p><p id="195f1e0d-fe8e-805d-9c16-f723fcc5e2b4" class="">
+</p><p id="195f1e0d-fe8e-802b-a7db-f7436a485044" class="">
+</p><p id="195f1e0d-fe8e-8005-b27c-f9c2665254de" class="">
+</p><p id="195f1e0d-fe8e-80a3-8e39-d9b174acb8c4" class="">
+</p><p id="195f1e0d-fe8e-801d-b0c4-f4681174bfe6" class="">
+</p><p id="195f1e0d-fe8e-8099-b8b6-ed00f2b26504" class="">
+</p><p id="195f1e0d-fe8e-8035-9763-e81ac25df325" class="">
+</p><p id="195f1e0d-fe8e-8074-8ccf-d1a47eeba131" class="">
+</p><p id="195f1e0d-fe8e-80a3-97d1-f11cdca0edb5" class="">
+</p><p id="195f1e0d-fe8e-80f6-a7aa-d2d46a64c2b9" class="">
+</p><p id="195f1e0d-fe8e-80c9-bd32-cad3a88648ed" class="">
+</p><p id="195f1e0d-fe8e-80ed-a6c1-c852fdc3b600" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
